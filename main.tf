@@ -28,10 +28,16 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "private" {
   count = var.private_subnet_count
 
-  # CHANGED: pin all private subnets explicitly to us-east-1a
-  availability_zone       = "us-east-1a"
+  # Keep existing behavior for subnets [0] and [1], and add the requested subnet as [2].
+  availability_zone = count.index == 2 ? "us-east-1b" : "us-east-1a"
+
   # keep existing CIDR behavior exactly as-is
-  cidr_block              = count.index == 1 ? "10.50.1.0/24" : cidrsubnet(var.cidr_block, 8, count.index)
+  cidr_block = (
+    count.index == 1 ? "10.50.1.0/24" :
+    count.index == 2 ? "10.50.2.0/24" :
+    cidrsubnet(var.cidr_block, 8, count.index)
+  )
+
   map_public_ip_on_launch = false
   vpc_id                  = aws_vpc.main.id
 

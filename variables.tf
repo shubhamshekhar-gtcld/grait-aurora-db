@@ -45,7 +45,7 @@ variable "nat_gateway" {
 variable "private_subnet_count" {
   description = "Number of private subnets to create."
   type        = number
-  default     = 2
+  default     = 3
   validation {
     condition     = var.private_subnet_count >= 0
     error_message = "private_subnet_count must be >= 0."
