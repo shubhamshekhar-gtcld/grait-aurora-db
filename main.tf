@@ -68,3 +68,29 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private.id
   subnet_id      = aws_subnet.private[count.index].id
 }
+
+# NEW: Security group for Aurora PostgreSQL database
+resource "aws_security_group" "aurora_pg_db" {
+  name        = "aurora-pg-db-sg"
+  description = "Security group for Aurora PostgreSQL database"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["106.220.60.242/32"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name      = "aurora-pg-db-sg"
+    ManagedBy = "terraform"
+  }
+}

@@ -37,3 +37,24 @@ output "private_id" {
   description = "ID of aws_route_table_association.private (auto-added by GRAIT)"
   value       = aws_route_table_association.private[*].id
 }
+
+
+# ============================================================
+# Added by GRAIT (merged with existing code)
+# ============================================================
+
+output "aurora_pg_db_security_group_id" {
+  description = "ID of the Aurora PostgreSQL DB security group."
+  value       = aws_security_group.aurora_pg_db.id
+}
+
+output "aurora_pg_db_security_group_arn" {
+  description = "ARN of the Aurora PostgreSQL DB security group."
+  value       = aws_security_group.aurora_pg_db.arn
+}
+
+output "aurora_pg_db_security_group_name" {
+  description = "Name of the Aurora PostgreSQL DB security group."
+  value       = aws_security_group.aurora_pg_db.name
+}
+
