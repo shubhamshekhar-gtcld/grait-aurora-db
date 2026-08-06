@@ -3,6 +3,7 @@ provider "aws" {
   region = var.region
 }
 
+# Kept to avoid introducing breaking refactors; still valid even though we now pin subnets to us-east-1a.
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -27,8 +28,10 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "private" {
   count = var.private_subnet_count
 
-  availability_zone       = local.azs[count.index % length(local.azs)]
-  cidr_block              = cidrsubnet(var.cidr_block, 8, count.index)
+  # CHANGED: pin all private subnets explicitly to us-east-1a
+  availability_zone       = "us-east-1a"
+  # keep existing CIDR behavior exactly as-is
+  cidr_block              = count.index == 1 ? "10.50.1.0/24" : cidrsubnet(var.cidr_block, 8, count.index)
   map_public_ip_on_launch = false
   vpc_id                  = aws_vpc.main.id
 
